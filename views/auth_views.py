@@ -75,10 +75,10 @@ def login_post():
         
             
     except Exception as e:
-        if e.message == "Invalid login credentials":
+        if str(e) == "Invalid login credentials":
             return jsonify({'error': '이메일 또는 비밀번호를 확인해주세요.'}), 401
         else:
-            return jsonify({'error': e.message}), 401
+            return jsonify({'error': str(e)}), 401
         
 # --- 로그아웃 API ---
 @bp.route('/logout/')
