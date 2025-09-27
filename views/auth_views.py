@@ -26,6 +26,11 @@ def signup():
 def level_test():
     return render_template('level-test.html')
 
+@bp.route('/find/')
+def find_account():
+    """아이디/비밀번호 찾기 페이지를 보여주는 함수"""
+    return render_template('find.html')
+
 
 # --- 회원가입 API ---
 @bp.route('/signup', methods=['POST'])

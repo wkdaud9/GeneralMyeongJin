@@ -1,61 +1,99 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>아이디 및 비밀번호 찾기 | 이해했슈</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/find.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/find.css') }}"
+    />
+  </head>
+  <body>
     <div class="find-container">
-        <h2>계정 찾기</h2>
+      <h2>계정 찾기</h2>
 
-        <div class="tabs">
-            <button class="tab-button active" onclick="openTab(event, 'find-id')">아이디 찾기</button>
-            <button class="tab-button" onclick="openTab(event, 'find-pw')">비밀번호 찾기</button>
-        </div>
+      <div class="tabs">
+        <button class="tab-button active" onclick="openTab(event, 'find-id')">
+          아이디 찾기
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'find-pw')">
+          비밀번호 찾기
+        </button>
+      </div>
 
-        <div id="find-id" class="tab-content active">
-            <form>
-                <div class="input-group">
-                    <label for="find_userid">아이디</label>
-                    <input type="text" id="find_userid" name="userid" placeholder="가입 시 등록한 아이디를 입력하세요" required>
-                </div>
-                <div class="input-group">
-                    <label for="email-for-id">이메일</label>
-                    <input type="email" id="email-for-id" name="email" placeholder="가입 시 등록한 이메일을 입력하세요" required>
-                </div>
-                <button type="submit" class="submit-btn">아이디 찾기</button>
-            </form>
-        </div>
+      <div id="find-id" class="tab-content active">
+        <form>
+          <div class="input-group">
+            <label for="find_userid">이름</label>
+            <input
+              type="text"
+              id="find_userid"
+              name="userid"
+              placeholder="가입 시 등록한 이름을 입력하세요"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="email-for-id">이메일</label>
+            <input
+              type="email"
+              id="email-for-id"
+              name="email"
+              placeholder="가입 시 등록한 이메일을 입력하세요"
+              required
+            />
+          </div>
+          <button type="submit" class="submit-btn">아이디 찾기</button>
+        </form>
+      </div>
 
-        <div id="find-pw" class="tab-content">
-            <form id="find-pw-form">
-                <div class="input-group">
-                    <label for="userid">아이디</label>
-                    <input type="text" id="userid" name="userid" placeholder="아이디를 입력하세요" required>
-                </div>
-                <div class="input-group">
-                    <label for="email-for-pw">이메일</label>
-                    <input type="email" id="email-for-pw" name="email" placeholder="가입 시 등록한 이메일을 입력하세요" required>
-                </div>
-                <button type="button" class="submit-btn" id="open-modal-btn">비밀번호 재설정</button>
-            </form>
-        </div>
-        
-        <div class="links">
-            <a href="#">로그인 페이지로 돌아가기</a>
-        </div>
+      <div id="find-pw" class="tab-content">
+        <form id="find-pw-form">
+          <div class="input-group">
+            <label for="userid">아이디</label>
+            <input
+              type="text"
+              id="userid"
+              name="userid"
+              placeholder="아이디를 입력하세요"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <label for="email-for-pw">이메일</label>
+            <input
+              type="email"
+              id="email-for-pw"
+              name="email"
+              placeholder="가입 시 등록한 이메일을 입력하세요"
+              required
+            />
+          </div>
+          <button type="button" class="submit-btn" id="open-modal-btn">
+            비밀번호 재설정
+          </button>
+        </form>
+      </div>
+
+      <div class="links">
+        <a 로그인 href="{{ url_for('auth.login') }}"
+          >로그인 페이지로 돌아가기</a
+        >
+      </div>
     </div>
 
     <div id="modal-backdrop" class="modal-backdrop">
-        <div class="modal-content">
-            <h3>재설정 링크 발송 완료</h3>
-            <p>입력하신 이메일 주소로 비밀번호 재설정 링크를 보냈습니다. 이메일을 확인해주세요.</p>
-            <button class="close-btn" id="close-modal-btn">확인</button>
-        </div>
+      <div class="modal-content">
+        <h3>재설정 링크 발송 완료</h3>
+        <p>
+          입력하신 이메일 주소로 비밀번호 재설정 링크를 보냈습니다. 이메일을
+          확인해주세요.
+        </p>
+        <button class="close-btn" id="close-modal-btn">확인</button>
+      </div>
     </div>
 
     <script src="{{ url_for('static', filename='js/find.js') }}"></script>
-</body>
+  </body>
 </html>
