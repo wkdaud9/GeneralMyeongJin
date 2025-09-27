@@ -23,13 +23,12 @@
       </div>
 
       <div id="find-id" class="tab-content active">
-        <form>
+        <form id="find-id-form">
           <div class="input-group">
-            <label for="find_userid">이름</label>
+            <label for="find-name">이름</label>
             <input
               type="text"
-              id="find_userid"
-              name="userid"
+              id="find-name"
               placeholder="가입 시 등록한 이름을 입력하세요"
               required
             />
@@ -39,7 +38,6 @@
             <input
               type="email"
               id="email-for-id"
-              name="email"
               placeholder="가입 시 등록한 이메일을 입력하세요"
               required
             />
@@ -51,16 +49,6 @@
       <div id="find-pw" class="tab-content">
         <form id="find-pw-form">
           <div class="input-group">
-            <label for="userid">아이디</label>
-            <input
-              type="text"
-              id="userid"
-              name="userid"
-              placeholder="아이디를 입력하세요"
-              required
-            />
-          </div>
-          <div class="input-group">
             <label for="email-for-pw">이메일</label>
             <input
               type="email"
@@ -70,30 +58,24 @@
               required
             />
           </div>
-          <button type="button" class="submit-btn" id="open-modal-btn">
-            비밀번호 재설정
-          </button>
+          <button type="submit" class="submit-btn">재설정 링크 받기</button>
         </form>
       </div>
 
       <div class="links">
-        <a 로그인 href="{{ url_for('auth.login') }}"
-          >로그인 페이지로 돌아가기</a
-        >
+        <a href="{{ url_for('auth.login') }}">로그인 페이지로 돌아가기</a>
       </div>
     </div>
 
-    <div id="modal-backdrop" class="modal-backdrop">
+    <div id="result-modal" class="modal-backdrop">
       <div class="modal-content">
-        <h3>재설정 링크 발송 완료</h3>
-        <p>
-          입력하신 이메일 주소로 비밀번호 재설정 링크를 보냈습니다. 이메일을
-          확인해주세요.
-        </p>
+        <h3 id="modal-title-text">아이디 찾기 결과</h3>
+        <p id="modal-message-text"></p>
         <button class="close-btn" id="close-modal-btn">확인</button>
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ url_for('static', filename='js/find.js') }}"></script>
   </body>
 </html>

@@ -21,13 +21,11 @@
 
       <form id="signupForm" class="card">
         <h1 class="sr-only">회원가입</h1>
-
-        <label for="id">아이디</label>
+        <label for="username">아이디</label>
         <input
           type="text"
-          id="id"
-          name="id"
-          placeholder="아이디"
+          id="username"
+          placeholder="사용할 아이디를 입력하세요"
           required
         />
 
@@ -60,7 +58,13 @@
         />
 
         <label for="name">이름</label>
-        <input type="text" id="name" name="name" placeholder="홍길동" required />
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="홍길동"
+          required
+        />
 
         <label for="level">수준</label>
         <div class="custom-select-container">
@@ -139,10 +143,10 @@
             Swal.fire("오류", "비밀번호가 일치하지 않습니다.", "error");
             return;
           }
-          
+
           // [수정 3] formData에 id 값을 추가
           const formData = {
-            id: document.getElementById("id").value,
+            username: document.getElementById("username").value, // 'id'가 아닌 'username'
             email: document.getElementById("email").value,
             password: password,
             name: document.getElementById("name").value,
