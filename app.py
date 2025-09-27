@@ -30,6 +30,7 @@ app.register_blueprint(auth_views.bp) # ◀ auth_views.bp 등록 코드를 추�
 app.register_blueprint(llm_views.bp)
 app.register_blueprint(mypage_views.bp)
 
+
 if __name__ == '__main__':
     # 백그라운드 스케줄러를 생성하고 작업을 등록합니다.
     scheduler = BackgroundScheduler(daemon=True, timezone='Asia/Seoul')
