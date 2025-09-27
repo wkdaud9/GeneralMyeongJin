@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>뉴스 서비스</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body
+    data-user-id="{{ user.id if user else '' }}"
+    data-user-level="{{ user.user_metadata.user_level if user else '' }}"
+  >
+    <div class="container">
+      <header class="top-header">
+        <a href="/" class="logo-link">
+          <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="서비스 로고"
+          />
+        </a>
+      </header>
+
+      <div class="nav-section">
+        <div class="header-right">
+          {% if user %}
+          <a href="{{ url_for('mypage.mypage') }}" class="header-btn mypage">
+            <i class="fa-solid fa-user"></i>
+            <span>My Page</span>
+          </a>
+          <a href="{{ url_for('auth.logout') }}" class="header-btn logout">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>로그아웃</span>
+          </a>
+          {% else %}
+          <a href="{{ url_for('auth.login') }}" class="header-btn login">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            <span>로그인</span>
+          </a>
+          <a href="{{ url_for('auth.signup') }}" class="header-btn signup">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>회원가입</span>
+          </a>
+          {% endif %}
+        </div>
+        <nav class="menu-bar">
+          <ul>
+            <li>
+              <a href="#" data-category="home" class="category-link active"
+                >홈</a
+              >
+            </li>
+            <li>
+              <a href="#" data-category="politics" class="category-link"
+                >정치</a
+              >
+            </li>
+            <li>
+              <a href="#" data-category="economy" class="category-link">경제</a>
+            </li>
+            <li>
+              <a href="#" data-category="international" class="category-link"
+                >국제</a
+              >
+            </li>
+            <li><a href="#" data-category="it" class="category-link">IT</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <main class="main-content">
+        <section class="today-news">
+          <h2>오늘의 뉴스</h2>
+          <div class="news-layout-container">
+            <div class="news-layout">
+              <p>뉴스를 불러오는 중...</p>
+            </div>
+          </div>
+          <button id="see-more-btn">더보기</button>
+        </section>
+
+        <aside class="ranking-sidebar">
+          <h2>랭킹</h2>
+          <div class="ranking-list"></div>
+        </aside>
+      </main>
+    </div>
+
+    <dialog class="news-modal">
+      <div class="modal-content">
+        <h2 id="modal-title"></h2>
+        <div id="modal-options">
+          <button id="summarize-btn" class="modal-action-btn">
+            AI로 쉽게 풀어보기
+          </button>
+          <a
+            id="original-link-btn"
+            href="#"
+            target="_blank"
+            class="modal-action-btn"
+            >원문 기사로 이동</a
+          >
+        </div>
+        <button class="modal-close-btn">닫기</button>
+      </div>
+    </dialog>
+
+    <div id="loader-overlay" class="hidden">
+      <div class="loader-spinner"></div>
+      <p class="loader-text">AI가 기사를 분석 중입니다...</p>
+    </div>
+
+    <div id="reader-view" class="hidden">
+      <div class="reader-container">
+        <div class="article-pane">
+          <h2 id="reader-title"></h2>
+          <div id="reader-content"></div>
+        </div>
+        <div class="dictionary-pane">
+          <h3 class="dictionary-title">
+            <i class="fa-solid fa-book-open"></i> 단어 뜻 풀이
+          </h3>
+          <div id="dictionary-content-wrapper">
+            <div id="dictionary-current">
+              <p class="placeholder">궁금한 단어를 드래그 해보세요!</p>
+            </div>
+            <div id="dictionary-history"></div>
+          </div>
+        </div>
+      </div>
+      <button id="reader-close-btn">&times;</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
