@@ -26,7 +26,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 def process_ai_text_for_markdown(raw_text):
     """
     AI가 생성한 텍스트를 마크다운으로 변환하기 전에,
-    줄 간격을 규칙에 맞게 '스마트하게' 조정하는 함수.
+    문단과 리스트의 줄 간격을 규칙에 맞게 '스마트하게' 조정하는 함수.
     """
     # 1. 초기 청소: 앞뒤 공백 제거 및 공백만 있는 줄 삭제
     lines = [line.strip() for line in raw_text.strip().split('\n') if line.strip()]
@@ -34,25 +34,23 @@ def process_ai_text_for_markdown(raw_text):
     if not lines:
         return ""
 
-    # 2. 재조립 로직: 규칙에 따라 줄바꿈을 추가하며 새로운 텍스트 생성
-    result_text = lines[0] # 첫 줄은 그대로 추가
+    # 정규 표현식으로 목록(리스트) 항목을 더 정확하게 감지하는 보조 함수
+    def is_list_item(line):
+        # '*', '-', 또는 '숫자.' 로 시작하는 경우를 목록으로 간주
+        return re.match(r'^\s*(\*|\-|\d+\.)\s+', line)
+
+    # 2. 재조립 로직 수정
+    result_text = lines[0]
 
     for i in range(1, len(lines)):
-        prev_line = lines[i-1]
-        current_line = lines[i]
-
-        # 규칙: 이전 줄과 현재 줄이 모두 목록(리스트) 항목이면 한 줄만 띄운다.
-        # (목록: '*', '-', 또는 '숫자.' 로 시작하는 경우)
-        is_prev_list_item = prev_line.startswith(('* ', '- ')) or (prev_line.split('.')[0].isdigit())
-        is_current_list_item = current_line.startswith(('* ', '- ')) or (current_line.split('.')[0].isdigit())
-
-        if is_prev_list_item and is_current_list_item:
-            # 목록 끼리는 한 줄 띄우기 (붙이기)
-            result_text += '\n' + current_line
+        # ▼▼▼ 여기가 핵심 수정 부분입니다 ▼▼▼
+        # 이전 줄과 현재 줄이 모두 목록 항목이면 한 줄만 띄움 (리스트 유지)
+        if is_list_item(lines[i-1]) and is_list_item(lines[i]):
+            result_text += '\n' + lines[i]
+        # 그 외의 모든 경우는 두 줄을 띄워서 문단을 분리
         else:
-            # 그 외의 모든 경우(문단, 소제목 등)는 두 줄 띄우기 (여백 생성)
-            result_text += '\n\n' + current_line
-            
+            result_text += '\n\n' + lines[i]
+    
     return result_text
 
 @bp.route('/summarize', methods=['POST'])

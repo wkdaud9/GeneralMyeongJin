@@ -385,6 +385,24 @@ h2 {
   color: #343a40;
 }
 
+#reader-content p,
+#reader-content blockquote,
+#reader-content h1,
+#reader-content h2,
+#reader-content h3,
+#reader-content h4,
+#reader-content h5,
+#reader-content h6 {
+  margin-top: 0;
+  margin-bottom: 0; /* ◀ 이 값을 조절하여 간격을 미세하게 변경 */
+}
+
+#reader-content ul,
+#reader-content ol {
+  margin-top: -1em;
+  margin-bottom: 0; /* ◀ 이 값을 조절하여 간격을 미세하게 변경 */
+}
+
 #reader-content img {
   max-width: 100%;
   height: auto;
