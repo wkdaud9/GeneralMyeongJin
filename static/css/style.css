@@ -380,10 +380,11 @@ h2 {
 }
 #reader-content {
   overflow-y: auto;
-  line-height: 1.8;
+  line-height: 1.5;
   font-size: 16px;
   color: #343a40;
 }
+
 #reader-content img {
   max-width: 100%;
   height: auto;

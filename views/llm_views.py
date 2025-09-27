@@ -6,6 +6,8 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 from supabase import create_client, Client
 import markdown # ◀ 마크다운 라이브러리 import
+import re # ◀◀◀ 이 줄을 추가하세요
+
 
 
 
@@ -21,6 +23,37 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+def process_ai_text_for_markdown(raw_text):
+    """
+    AI가 생성한 텍스트를 마크다운으로 변환하기 전에,
+    줄 간격을 규칙에 맞게 '스마트하게' 조정하는 함수.
+    """
+    # 1. 초기 청소: 앞뒤 공백 제거 및 공백만 있는 줄 삭제
+    lines = [line.strip() for line in raw_text.strip().split('\n') if line.strip()]
+
+    if not lines:
+        return ""
+
+    # 2. 재조립 로직: 규칙에 따라 줄바꿈을 추가하며 새로운 텍스트 생성
+    result_text = lines[0] # 첫 줄은 그대로 추가
+
+    for i in range(1, len(lines)):
+        prev_line = lines[i-1]
+        current_line = lines[i]
+
+        # 규칙: 이전 줄과 현재 줄이 모두 목록(리스트) 항목이면 한 줄만 띄운다.
+        # (목록: '*', '-', 또는 '숫자.' 로 시작하는 경우)
+        is_prev_list_item = prev_line.startswith(('* ', '- ')) or (prev_line.split('.')[0].isdigit())
+        is_current_list_item = current_line.startswith(('* ', '- ')) or (current_line.split('.')[0].isdigit())
+
+        if is_prev_list_item and is_current_list_item:
+            # 목록 끼리는 한 줄 띄우기 (붙이기)
+            result_text += '\n' + current_line
+        else:
+            # 그 외의 모든 경우(문단, 소제목 등)는 두 줄 띄우기 (여백 생성)
+            result_text += '\n\n' + current_line
+            
+    return result_text
 
 @bp.route('/summarize', methods=['POST'])
 def summarize_article():
@@ -68,7 +101,12 @@ def summarize_article():
         safety_settings = [{"category": c, "threshold": "BLOCK_NONE"} for c in ["HARM_CATEGORY_HARASSMENT", "HARM_CATEGORY_HATE_SPEECH", "HARM_CATEGORY_SEXUALLY_EXPLICIT", "HARM_CATEGORY_DANGEROUS_CONTENT"]]
         
         ai_response = model.generate_content(prompt, safety_settings=safety_settings)
-        summary_html = markdown.markdown(ai_response.text)
+        # ▼▼▼ 여기가 최종 수정의 핵심입니다. ▼▼▼
+        # 1. AI가 생성한 원본 텍스트를 위에서 만든 스마트 처리 함수에 전달
+        cleaned_text = process_ai_text_for_markdown(ai_response.text)
+        
+        # 2. 완벽하게 정제된 텍스트를 Markdown으로 변환
+        summary_html = markdown.markdown(cleaned_text)
         
         return jsonify({'summary': summary_html})
         
