@@ -22,9 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const dictionaryHistory = document.getElementById("dictionary-history");
   const readerCloseBtn = document.getElementById("reader-close-btn");
 
-  let summaryPromise = null;
+  const sidebarTabs = document.querySelectorAll(".tab-link");
+  const tabContents = document.querySelectorAll(".dictionary-pane .tab-content");
 
-  // 2. 뉴스 데이터를 받아 화면에 그려주는 함수 (수정됨)
+  let summaryPromise = null;
+  let currentArticleId = null;
+
+  // 2. 뉴스 데이터를 받아 화면에 그려주는 함수
   const renderNews = (newsData, rankingData) => {
     newsLayout.innerHTML = "";
     rankingList.innerHTML = "";
@@ -32,35 +36,34 @@ document.addEventListener("DOMContentLoaded", () => {
       newsLayout.innerHTML = "<p>표시할 뉴스가 없습니다.</p>";
       return;
     }
-
     const featured = newsData[0];
     const featuredHtml = `
-            <article class="news-item featured" data-article-id="${featured.article_id}" data-url="${featured.url}">
-                <img src="${featured.thumbnail}" alt="${featured.title}" class="image-placeholder">
-                <div class="article-content">
-                    <h4>${featured.title}</h4>
-                    </div>
-            </article>`;
+              <article class="news-item featured" data-article-id="${featured.article_id}" data-url="${featured.url}">
+                  <img src="${featured.thumbnail}" alt="${featured.title}" class="image-placeholder">
+                  <div class="article-content">
+                      <h4>${featured.title}</h4>
+                      </div>
+              </article>`;
     newsLayout.insertAdjacentHTML("beforeend", featuredHtml);
 
     newsData.slice(1).forEach((news) => {
       const newsHtml = `
-                <article class="news-item" data-article-id="${news.article_id}" data-url="${news.url}">
-                    <img src="${news.thumbnail}" alt="${news.title}" class="image-placeholder small">
-                    <div class="article-content">
-                        <h5>${news.title}</h5>
-                        </div>
-                </article>`;
+                          <article class="news-item" data-article-id="${news.article_id}" data-url="${news.url}">
+                              <img src="${news.thumbnail}" alt="${news.title}" class="image-placeholder small">
+                              <div class="article-content">
+                                  <h5>${news.title}</h5>
+                                  </div>
+                          </article>`;
       newsLayout.insertAdjacentHTML("beforeend", newsHtml);
     });
 
     if (rankingData && rankingData.length > 0) {
       rankingData.forEach((news) => {
         const rankingHtml = `
-                    <article class="ranking-item" data-article-id="${news.article_id}" data-url="${news.url}">
-                        <img src="${news.thumbnail}" alt="${news.title}" class="image-placeholder rank">
-                        <div class="article-content"><h6>${news.title}</h6></div>
-                    </article>`;
+                          <article class="ranking-item" data-article-id="${news.article_id}" data-url="${news.url}">
+                              <img src="${news.thumbnail}" alt="${news.title}" class="image-placeholder rank">
+                              <div class="article-content"><h6>${news.title}</h6></div>
+                          </article>`;
         rankingList.insertAdjacentHTML("beforeend", rankingHtml);
       });
     } else {
@@ -80,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       renderNews(data.news_list, data.ranking_list);
     } catch (error) {
+      console.error("뉴스 로딩 에러:", error);
       newsLayout.innerHTML = "<p>뉴스를 불러오는데 실패했습니다.</p>";
     }
   };
@@ -111,17 +115,15 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   };
 
-  // 7. 뉴스 클릭 시 선택지 모달을 여는 함수
-  // 7. 뉴스 클릭 시 선택지 모달을 열고, 조회수를 올리는 함수 (수정)
+  // 7. 뉴스 클릭 시 선택지 모달을 열고, 조회수를 올리는 함수
   const openChoiceModal = (articleElement) => {
     const title = articleElement.querySelector("h4, h5, h6").textContent;
     const url = articleElement.dataset.url;
-    const articleId = articleElement.dataset.articleId;
+    currentArticleId = articleElement.dataset.articleId;
 
-    // ▼▼▼ 조회수 증가 API 호출 (결과는 기다리지 않음) ▼▼▼
-    if (articleId) {
-      fetch(`/api/news/view/${articleId}`, { method: "POST" }).catch((error) =>
-        console.error("Failed to record view:", error)
+    if (currentArticleId) {
+      fetch(`/api/news/view/${currentArticleId}`, { method: "POST" }).catch(
+        (error) => console.error("Failed to record view:", error)
       );
     }
 
@@ -152,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       readerTitle.textContent = modalTitle.textContent;
-      readerContent.innerHTML = data.summary.replace(/\n/g, "<br>");
+      readerContent.innerHTML = data.summary;
 
       dictionaryCurrent.innerHTML =
         '<p class="placeholder">궁금한 단어를 드래그 해보세요!</p>';
@@ -161,13 +163,8 @@ document.addEventListener("DOMContentLoaded", () => {
       readerView.classList.remove("hidden");
       setTimeout(() => readerView.classList.add("visible"), 10);
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "AI 분석 실패",
-        text: error.message,
-      });
+      alert(`AI 분석 실패: ${error.message}`);
     } finally {
-      // 성공하든 실패하든, 마지막에는 항상 로딩 오버레이를 숨깁니다.
       loaderOverlay.classList.remove("visible");
       setTimeout(() => loaderOverlay.classList.add("hidden"), 300);
     }
@@ -177,6 +174,19 @@ document.addEventListener("DOMContentLoaded", () => {
   readerContent.addEventListener("mouseup", async () => {
     const selectedText = window.getSelection().toString().trim();
     if (selectedText.length > 0 && selectedText.length < 15) {
+      
+      const backgroundTab = document.querySelector('.tab-link[data-tab="tab-previous-articles"]');
+      if (backgroundTab && backgroundTab.classList.contains("active")) {
+        const backgroundContent = document.getElementById('tab-previous-articles');
+        backgroundTab.classList.remove('active');
+        backgroundContent.classList.remove('active');
+        
+        const dictionaryTab = document.querySelector('.tab-link[data-tab="tab-dictionary"]');
+        const dictionaryContent = document.getElementById('tab-dictionary');
+        dictionaryTab.classList.add('active');
+        dictionaryContent.classList.add('active');
+      }
+
       if (
         dictionaryCurrent.innerHTML &&
         !dictionaryCurrent.querySelector(".placeholder")
@@ -202,7 +212,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }),
         });
         const data = await response.json();
-
         dictionaryCurrent.innerHTML = `<h4>${data.word}</h4><p>${data.definition}</p>`;
       } catch (error) {
         dictionaryCurrent.innerHTML = "<p>단어 뜻 분석에 실패했습니다.</p>";
@@ -220,7 +229,17 @@ document.addEventListener("DOMContentLoaded", () => {
     readerView.classList.remove("visible");
     setTimeout(() => readerView.classList.add("hidden"), 300);
   });
+  
+  // 11. 사이드바 탭 기능
+  sidebarTabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+          sidebarTabs.forEach(t => t.classList.remove("active"));
+          tabContents.forEach(c => c.classList.remove("active"));
+          tab.classList.add("active");
+          document.getElementById(tab.dataset.tab).classList.add("active");
+      });
+  });
 
-  // 11. 페이지가 처음 로드될 때 'home' 카테고리 뉴스를 자동으로 불러옵니다.
+  // 12. 페이지가 처음 로드될 때 'home' 카테고리 뉴스를 자동으로 불러옵니다.
   fetchAndRenderNews("home");
 });
