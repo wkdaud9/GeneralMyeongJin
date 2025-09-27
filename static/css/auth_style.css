@@ -488,7 +488,6 @@ label {
 }
 
 .login-box {
-  width: min(520px, 100%); /* 폭 제한 → 회원가입 박스 느낌 */
   border-radius: 16px;
   padding: 24px;
   margin-top: 0;
