@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>로그인 | 이해했슈</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/auth_style.css') }}"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <main class="login-like">
+      <a class="brand center" href="/">
+        <img
+          src="{{ url_for('static', filename='images/logo.png') }}"
+          alt="서비스 로고"
+        />
+      </a>
+      <section class="login-box card">
+        <form id="loginForm" class="login-form">
+          <h1 class="sr-only">로그인</h1>
+          <label for="email" class="sr-only">아이디 또는 전화번호</label>
+          <input
+            id="email"
+            type="text"
+            placeholder="아이디 또는 전화번호"
+            required
+          />
+          <label for="password" class="sr-only">비밀번호</label>
+          <input
+            id="password"
+            type="password"
+            placeholder="비밀번호"
+            required
+          />
+          <button class="btn primary block login-btn" type="submit">
+            로그인
+          </button>
+        </form>
+        <div class="login-links">
+          <a href="#" id="findPw">비밀번호 찾기</a
+          ><span class="divider">|</span> <a href="#" id="findId">아이디 찾기</a
+          ><span class="divider">|</span>
+          <a href="{{ url_for('auth.signup') }}" class="accent">회원가입</a>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const formData = {
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+          };
+
+          try {
+            const response = await fetch("{{ url_for('auth.login_post') }}", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              // 로그인 성공
+              Swal.fire({
+                icon: "success",
+                title: "로그인 성공!",
+                text: "메인 페이지로 이동합니다.",
+                timer: 1500,
+                showConfirmButton: false,
+              }).then(() => {
+                window.location.href = "/";
+              });
+            } else {
+              // 서버로부터 받은 특정 에러 메시지 (예: "Invalid login credentials")
+              Swal.fire({
+                icon: "warning",
+                title: "로그인 실패",
+                text: result.error,
+              });
+            }
+          } catch (error) {
+            // 네트워크 오류 등 서버와 아예 통신하지 못했을 때
+            console.error("Fetch Error:", error);
+            Swal.fire({
+              icon: "error",
+              title: "오류 발생",
+              text: "서버와 통신할 수 없습니다. 잠시 후 다시 시도해주세요.",
+            });
+          }
+        });
+    </script>
+  </body>
+</html>

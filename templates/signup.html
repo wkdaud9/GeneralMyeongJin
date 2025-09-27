@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>회원가입 | 이해했슈</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/auth_style.css') }}"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <main class="auth">
+      <a class="brand center" href="/">
+        <img
+          src="{{ url_for('static', filename='images/logo.png') }}"
+          alt="서비스 로고"
+        />
+      </a>
+
+      <form id="signupForm" class="card">
+        <h1 class="sr-only">회원가입</h1>
+
+        <label for="email">이메일</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="user@example.com"
+          required
+        />
+
+        <label for="pw">비밀번호</label>
+        <input
+          type="password"
+          id="pw"
+          placeholder="영문, 숫자 포함 8자 이상"
+          minlength="8"
+          required
+        />
+
+        <label for="pw-confirm">비밀번호 확인</label>
+        <input
+          type="password"
+          id="pw-confirm"
+          placeholder="••••••••"
+          minlength="8"
+          required
+        />
+
+        <label for="name">이름</label>
+        <input type="text" id="name" placeholder="홍길동" required />
+
+        <label for="level">수준</label>
+        <div class="custom-select-container">
+          <div class="custom-select-display" id="level-display">
+            Level 1 – 쉬운 설명
+          </div>
+          <ul class="custom-select-options hidden" id="level-options">
+            <li class="option-item" data-value="1">Level 1 – 쉬운 설명</li>
+            <li class="option-item" data-value="2">Level 2 – 표준 설명</li>
+            <li class="option-item" data-value="3">
+              Level 3 – 심화/신조어 해설
+            </li>
+          </ul>
+          <input type="hidden" id="level" name="level" value="1" />
+        </div>
+
+        <button type="submit" class="btn primary block">가입하기</button>
+      </form>
+
+      <p class="signup">
+        이미 계정이 있으신가요?
+        <a href="{{ url_for('auth.login') }}" class="link">로그인</a>
+      </p>
+    </main>
+
+    <script>
+      // --- 커스텀 셀렉트 박스 로직 (이 부분이 복원되었습니다) ---
+      const levelDisplay = document.getElementById("level-display");
+      const levelOptions = document.getElementById("level-options");
+      const levelInput = document.getElementById("level");
+
+      levelDisplay.addEventListener("click", () => {
+        levelOptions.classList.toggle("hidden");
+      });
+
+      levelOptions.addEventListener("click", (e) => {
+        if (e.target.tagName === "LI") {
+          levelDisplay.textContent = e.target.textContent;
+          levelInput.value = e.target.dataset.value;
+          levelOptions.classList.add("hidden");
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!levelDisplay.contains(e.target)) {
+          levelOptions.classList.add("hidden");
+        }
+      });
+
+      // --- 폼 제출 이벤트 (기존과 동일) ---
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const password = document.getElementById("pw").value;
+          const confirmPassword = document.getElementById("pw-confirm").value;
+
+          // 프론트엔드 유효성 검사
+          if (
+            password.length < 8 ||
+            !/[a-zA-Z]/.test(password) ||
+            !/[0-9]/.test(password)
+          ) {
+            Swal.fire(
+              "오류",
+              "비밀번호는 영문, 숫자를 포함하여 8자 이상이어야 합니다.",
+              "error"
+            );
+            return;
+          }
+          if (password !== confirmPassword) {
+            Swal.fire("오류", "비밀번호가 일치하지 않습니다.", "error");
+            return;
+          }
+
+          const formData = {
+            email: document.getElementById("email").value,
+            password: password,
+            name: document.getElementById("name").value,
+            level: levelInput.value,
+          };
+
+          try {
+            const response = await fetch("{{ url_for('auth.signup_post') }}", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              Swal.fire({
+                icon: "success",
+                title: "회원가입 완료!",
+                text: "메인 페이지로 이동합니다.",
+                timer: 1500,
+                showConfirmButton: false,
+              }).then(() => {
+                window.location.href = "/";
+              });
+            } else {
+              Swal.fire("회원가입 실패", result.error, "warning");
+            }
+          } catch (error) {
+            Swal.fire(
+              "오류",
+              "서버와 통신할 수 없습니다. 잠시 후 다시 시도해주세요.",
+              "error"
+            );
+          }
+        });
+    </script>
+  </body>
+</html>

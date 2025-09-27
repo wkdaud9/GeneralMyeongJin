@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>뉴스 문해력 레벨 테스트</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/level-test.css') }}"
+    />
+  </head>
+  <body class="test-page">
+    <main class="auth">
+      <div class="brand center" id="test-header"></div>
+      <h1 class="title" id="test-title">
+        <span id="level-title">문해력 테스트</span>
+        <br />
+        <small id="skill-description" class="small"
+          >당신의 뉴스 이해도를 측정합니다.</small
+        >
+      </h1>
+
+      <div class="card" id="quiz-container">
+        <div class="progress">
+          <div class="bar" id="progress-bar"></div>
+        </div>
+        <p class="small" id="progress-text">0/12</p>
+        <div class="quiz-card" id="question-area">
+          <p id="question-text"></p>
+        </div>
+        <div class="choices" id="answer-buttons"></div>
+        <div class="quiz-footer">
+          <button id="next-button" class="btn primary block hidden">
+            다음 문제
+          </button>
+        </div>
+      </div>
+
+      <div class="card hidden" id="result-container">
+        <h2 class="section-title">테스트 결과</h2>
+        <p id="final-score-text"></p>
+        <h3 id="level-result-text"></h3>
+        <p id="level-description-text" class="small"></p>
+        <button id="restart-button" class="btn secondary block">
+          메인 화면으로 가기
+        </button>
+      </div>
+
+      <footer class="footer">&copy; 2025 이해했슈. All rights reserved.</footer>
+    </main>
+  </body>
+  <script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+</html>

@@ -1,0 +1,650 @@
+/* =========================================================
+   Context News - Global Styles (Ivory Palette)
+   File: style.css
+   ========================================================= */
+
+/* ---------- Color Tokens ---------- */
+:root {
+  /* Light */
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --primary: #111827; /* 진한 잉크 */
+  --accent: #3b82f6; /* 링크/포커스 */
+  --border: #e5e7eb;
+  --chip: #f5f5f4;
+
+  --radius: 12px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.03);
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--accent) 25%, transparent);
+}
+
+/* ---------- Reset / Base ---------- */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto,
+    "Apple SD Gothic Neo", Pretendard, "Malgun Gothic", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+img {
+  max-width: 100%;
+  display: block;
+}
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Utilities ---------- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.hidden {
+  display: none !important;
+}
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--chip);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+
+/* ---------- Header (optional) ---------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: saturate(120%) blur(10px);
+  background: color-mix(in oklab, var(--bg) 85%, white 15%);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+}
+.logo {
+  font-weight: 800;
+  font-size: 22px;
+}
+nav.tabs {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  color: var(--muted);
+}
+.tab {
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.tab.active {
+  color: var(--text);
+  background: var(--chip);
+}
+.search {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  min-width: 160px;
+  color: var(--text);
+}
+
+/* ---------- Grid (뉴스 페이지 등) ---------- */
+.grid-3 {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 2fr 1.25fr 1fr;
+}
+@media (max-width: 1200px) {
+  .grid-3 {
+    grid-template-columns: 1.7fr 1.3fr;
+  }
+}
+@media (max-width: 900px) {
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Cards / Sections ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.card.pad {
+  padding: 16px;
+}
+.section-title {
+  font-weight: 800;
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+}
+.btn:hover {
+  filter: brightness(0.98);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn.primary {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+}
+.btn.secondary {
+  background: var(--chip);
+  color: var(--text);
+}
+.btn.block {
+  display: flex;
+  width: 100%;
+}
+.btn.sm {
+  padding: 8px 12px;
+}
+
+/* ---------- Inputs ---------- */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--chip);
+  color: var(--text);
+  height: 44px;
+}
+input::placeholder {
+  color: #9ca3af;
+}
+label {
+  font-weight: 600;
+}
+
+/* ---------- News List (demo) ---------- */
+.news-list {
+  display: grid;
+  gap: 12px;
+}
+.news-item {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.thumb {
+  background: var(--chip);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--muted);
+}
+.news-item h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+.meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ---------- Right Sticky (AI helper) ---------- */
+.sticky-box {
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+.ai-intro {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: var(--chip);
+}
+.ai-out {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 90px;
+  background: var(--surface);
+}
+
+/* =========================================================
+   AUTH PAGES (login, signup, level-test) 공통 스타일
+   ========================================================= */
+.auth {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 48px 16px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.brand {
+  position: fixed;
+  left: 20px;
+  top: 16px;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--text);
+  text-decoration: none;
+}
+.title {
+  margin: 48px 0 8px;
+  text-align: center;
+  line-height: 1.3;
+  font-size: 28px;
+  font-weight: 800;
+}
+.auth .card {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.auth input,
+.auth select {
+  margin-bottom: 10px;
+}
+.oauth img {
+  width: 20px;
+  height: 20px;
+}
+.or {
+  color: var(--muted);
+  font-size: 14px;
+}
+.links {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+.links a.em {
+  color: var(--accent);
+  font-weight: 700;
+}
+.signup {
+  color: var(--muted);
+  font-size: 14px;
+}
+.signup .link {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+@media (max-width: 480px) {
+  .title {
+    font-size: 22px;
+  }
+}
+
+/* ---------- Signup / Stepper (optional) ---------- */
+.stepper {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0 8px;
+}
+.step {
+  height: 6px;
+  flex: 1;
+  background: var(--chip);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.step.fill {
+  background: linear-gradient(90deg, var(--accent), var(--accent));
+}
+
+/* ---------- Level Test (quiz) ---------- */
+.quiz-card {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.q-title {
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+.choices {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--chip);
+  cursor: pointer;
+}
+.choice input {
+  accent-color: var(--accent);
+}
+.quiz-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.progress {
+  height: 6px;
+  background: var(--chip);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+  padding: 24px;
+}
+
+/* =========================================================
+   LOGIN (회원가입 박스 느낌으로 수정)
+   ========================================================= */
+.login-like {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  gap: 16px; /* 로고와 로그인 박스 사이의 간격을 줄입니다. */
+}
+
+.brand.center {
+  position: static;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: -60px;
+  background: none;
+  width: auto;
+  height: auto;
+}
+
+.brand.center img {
+  width: 220px;
+  height: auto;
+  display: block;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; /* 로고와 로그인 박스 사이의 간격 */
+}
+.logo-container img {
+  width: 200px; /* 로고 크기 조정 */
+  height: auto;
+  display: block;
+  /* border-radius 제거 (투명 배경 가정) */
+  /* box-shadow: 0 4px 15px rgba(0,0,0,0.1); 그림자 필요시 추가 */
+}
+
+.login-box {
+  width: min(520px, 100%); /* 폭 제한 → 회원가입 박스 느낌 */
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 0;
+}
+
+.login-tabs {
+  margin: 0 0 16px;
+  padding: 0 8px;
+  border-radius: 12px;
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+}
+.login-tab {
+  flex: 1;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  cursor: default;
+  font-weight: 700;
+  color: var(--muted);
+  border-right: 1px solid var(--border);
+}
+.login-tab:last-child {
+  border-right: none;
+}
+.login-tab.active {
+  color: var(--text);
+  background: var(--chip);
+}
+
+.login-form {
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.login-form input {
+  height: 52px;
+  border-radius: 12px;
+  background: var(--chip);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+}
+.login-btn {
+  height: 52px;
+  margin-top: 6px;
+  border-radius: 12px;
+}
+
+.alt-btn {
+  margin: 16px 0 8px;
+  height: 50px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.login-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.login-links a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.login-links a.accent {
+  color: var(--accent);
+  font-weight: 700;
+}
+.login-links .divider {
+  color: var(--border);
+}
+
+@media (max-width: 520px) {
+  .logo-container img {
+    width: 180px;
+  } /* 모바일에서 로고 크기 조정 */
+  .login-box {
+    width: 100%;
+    padding: 20px;
+  }
+  .login-form input,
+  .login-btn {
+    height: 50px;
+  }
+}
+
+/* ---------- Print ---------- */
+@media print {
+  .header,
+  .footer {
+    display: none !important;
+  }
+  .card {
+    box-shadow: none;
+    border-color: #ddd;
+  }
+}
+
+/* =========================================================
+   커스텀 드롭다운 메뉴 스타일
+   ========================================================= */
+.custom-select-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px; /* 기존 input 요소와 동일한 간격 유지 */
+}
+
+.custom-select-display {
+  width: 100%;
+  height: 44px; /* input과 동일한 높이 */
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--chip);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.custom-select-display::after {
+  content: "▼";
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.custom-select-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 100%;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.option-item {
+  padding: 12px 14px; /* 이 부분을 수정하여 간격을 조절하세요! */
+  cursor: pointer;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.option-item:hover {
+  background: var(--chip);
+}
