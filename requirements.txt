@@ -7,3 +7,4 @@ gunicorn
 google-generativeai
 markdown
 dotenv
+gotrue

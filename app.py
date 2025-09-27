@@ -1,6 +1,6 @@
 from flask import Flask
 # auth_views를 추가로 import 합니다.
-from views import main_views, auth_views
+from views import main_views, auth_views, scraper_views
 
 app = Flask(__name__)
 
