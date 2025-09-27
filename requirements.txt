@@ -1,0 +1,9 @@
+Flask
+python-dotenv
+supabase
+beautifulsoup4
+requests
+gunicorn
+google-generativeai
+markdown
+dotenv
