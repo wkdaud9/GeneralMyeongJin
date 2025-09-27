@@ -112,29 +112,30 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // 7. 뉴스 클릭 시 선택지 모달을 여는 함수
-   // 7. 뉴스 클릭 시 선택지 모달을 열고, 조회수를 올리는 함수 (수정)
-    const openChoiceModal = (articleElement) => {
-        const title = articleElement.querySelector('h4, h5, h6').textContent;
-        const url = articleElement.dataset.url;
-        const articleId = articleElement.dataset.articleId;
+  // 7. 뉴스 클릭 시 선택지 모달을 열고, 조회수를 올리는 함수 (수정)
+  const openChoiceModal = (articleElement) => {
+    const title = articleElement.querySelector("h4, h5, h6").textContent;
+    const url = articleElement.dataset.url;
+    const articleId = articleElement.dataset.articleId;
 
-        // ▼▼▼ 조회수 증가 API 호출 (결과는 기다리지 않음) ▼▼▼
-        if (articleId) {
-            fetch(`/api/news/view/${articleId}`, { method: 'POST' })
-                .catch(error => console.error('Failed to record view:', error));
-        }
+    // ▼▼▼ 조회수 증가 API 호출 (결과는 기다리지 않음) ▼▼▼
+    if (articleId) {
+      fetch(`/api/news/view/${articleId}`, { method: "POST" }).catch((error) =>
+        console.error("Failed to record view:", error)
+      );
+    }
 
-        modalTitle.textContent = title;
-        originalLinkBtn.href = url;
-        
-        summaryPromise = fetch('/api/summarize', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: url })
-        });
-        
-        choiceModal.showModal();
-    };
+    modalTitle.textContent = title;
+    originalLinkBtn.href = url;
+
+    summaryPromise = fetch("/api/summarize", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: url }),
+    });
+
+    choiceModal.showModal();
+  };
 
   // 8. 'AI로 풀어보기' 버튼 클릭 이벤트
   summarizeBtn.addEventListener("click", async () => {
@@ -160,8 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
       readerView.classList.remove("hidden");
       setTimeout(() => readerView.classList.add("visible"), 10);
     } catch (error) {
-      alert(error.message);
+      Swal.fire({
+        icon: "error",
+        title: "AI 분석 실패",
+        text: error.message,
+      });
     } finally {
+      // 성공하든 실패하든, 마지막에는 항상 로딩 오버레이를 숨깁니다.
       loaderOverlay.classList.remove("visible");
       setTimeout(() => loaderOverlay.classList.add("hidden"), 300);
     }

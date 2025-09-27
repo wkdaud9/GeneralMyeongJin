@@ -8,3 +8,4 @@ google-generativeai
 markdown
 dotenv
 gotrue
+APScheduler

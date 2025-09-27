@@ -8,9 +8,6 @@ from supabase import create_client, Client
 import markdown # ◀ 마크다운 라이브러리 import
 import re # ◀◀◀ 이 줄을 추가하세요
 
-
-
-
 load_dotenv()
 bp = Blueprint('llm', __name__, url_prefix='/api')
 
