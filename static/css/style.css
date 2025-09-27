@@ -359,6 +359,23 @@ h2 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
+.timeline-placeholder {
+  padding: 15px; /* 적절한 패딩 */
+  color: #6c757d; /* var(--muted) */
+  font-size: 13px; /* 글자 크기 */
+  text-align: center; /* 중앙 정렬 (선택 사항) */
+
+  /* 🌟🌟🌟 핵심 수정: 텍스트가 한 줄로 유지되도록 🌟🌟🌟 */
+  white-space: nowrap; /* 텍스트를 강제로 한 줄에 유지 */
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+  text-overflow: ellipsis; /* 숨겨진 내용을 ...으로 표시 */
+
+  margin: 10px 0; /* 상하 마진 */
+  background-color: #f8f9fa; /* 배경색 (var(--background-light)) */
+  border-radius: 8px; /* 둥근 모서리 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03); /* 은은한 그림자 */
+}
+
 .dictionary-pane {
   flex: 1;
   background: #f8f9fa;
@@ -384,22 +401,22 @@ h2 {
   font-size: 16px;
   color: #343a40;
 }
-#reader-content p {
+#reader-content p,
+#reader-content blockquote,
+#reader-content h1,
+#reader-content h2,
+#reader-content h3,
+#reader-content h4,
+#reader-content h5,
+#reader-content h6 {
   margin-top: 0;
-  margin-bottom: 0.8em;
+  margin-bottom: 0; /* ◀ 이 값을 조절하여 간격을 미세하게 변경 */
 }
-#reader-content h2 {
-  margin-top: 1.5em;
-  margin-bottom: 0.8em;
-}
-#reader-content h3 {
-  margin-top: 1.2em;
-  margin-bottom: 0.7em;
-}
-#reader-content ul {
-  margin-top: 1.2em;
-  margin-bottom: 1.2em;
-  padding-left: 1.5em;
+
+#reader-content ul,
+#reader-content ol {
+  margin-top: -1em;
+  margin-bottom: 0; /* ◀ 이 값을 조절하여 간격을 미세하게 변경 */
 }
 #reader-content img {
   max-width: 100%;

@@ -156,6 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
       readerTitle.textContent = modalTitle.textContent;
       readerContent.innerHTML = data.summary.replace(/\n/g, "<br>");
 
+      readerContent.scrollTop = 0; // 즉시 맨 위로 이동
+
       // 리더 뷰가 열릴 때, '사건의 배경' 탭을 기본으로 활성화하고 타임라인 로딩 시작
       activateTab("tab-previous-articles");
       loadTimeline(currentArticleId);
@@ -265,11 +267,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       } else {
         timelineList.innerHTML =
-          '<p class="placeholder">관련된 과거 기사를 찾을 수 없습니다.</p>';
+          '<p class="timeline-placeholder">관련된 과거 기사를 찾을 수 없습니다.</p>';
       }
     } catch (error) {
       timelineList.innerHTML =
-        '<p class="placeholder">타임라인을 불러오는 데 실패했습니다.</p>';
+        '<p class="timeline-placeholder">타임라인을 불러오는 데 실패했습니다.</p>';
     }
   };
 
