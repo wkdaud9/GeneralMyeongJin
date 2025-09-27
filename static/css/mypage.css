@@ -1,0 +1,227 @@
+/* =========================================================
+   My Page Styles
+   File: mypage.css
+   ========================================================= */
+
+:root {
+  --bg: #f9fafb;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --border: #e5e7eb;
+  --chip: #f3f4f6;
+  --radius: 16px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.mypage-container {
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+.mypage-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2.5em;
+}
+
+.profile-section {
+  text-align: center;
+  margin-bottom: 2em;
+}
+.profile-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--chip);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em;
+  color: var(--muted);
+  margin: 0 auto 1em;
+  border: 4px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+.profile-name {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 0;
+}
+.profile-email {
+  color: var(--muted);
+  margin: 0.2em 0 1em;
+}
+.level-badge {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 0.3em 1em;
+  border-radius: 99px;
+  font-size: 0.9em;
+  font-weight: 600;
+  margin-top: 1em;
+}
+
+.action-section {
+  padding-bottom: 2em;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2em;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn:hover {
+  background-color: var(--chip);
+  text-decoration: none;
+}
+.btn.primary {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+.btn.primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+.btn.block {
+  display: block;
+  width: 100%;
+}
+
+/* 활동 기록 그리드 */
+.history-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.history-section {
+  display: flex;
+  flex-direction: column;
+}
+.history-section h3 {
+  font-size: 1.5em;
+  margin: 0 0 1em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* ▼▼▼ 여기가 핵심 수정 부분입니다 ▼▼▼ */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  height: 400px; /* 높이를 고정합니다 (기존 max-height에서 변경) */
+  overflow: hidden; /* 처음에는 넘치는 내용을 숨깁니다 */
+  position: relative; /* 블러 효과를 위한 기준점 */
+  transition: height 0.3s ease; /* (선택) 높이 변화 애니메이션 */
+}
+
+/* '더보기' 클릭 후 스크롤이 생겼을 때의 스타일 */
+.history-list.scrollable {
+  overflow-y: auto; /* 세로 스크롤을 생성합니다 */
+  padding-right: 10px;
+}
+
+/* 블러 효과 (스크롤 가능할 때만 보임) */
+.history-list.scrollable::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: linear-gradient(to bottom, var(--surface) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  padding: 1em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.history-list a.history-item {
+  text-decoration: none;
+  color: var(--text);
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+.history-list a.history-item:hover {
+  background-color: var(--chip);
+  box-shadow: var(--shadow);
+}
+.history-thumb {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+.history-item-content h4 {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.history-item-content p {
+  margin: 0.3em 0 0;
+  font-size: 0.9em;
+  color: var(--muted);
+}
+.empty-message {
+  padding: 2em;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* '더보기' 버튼 섹션 */
+.see-more-section {
+  text-align: center;
+  margin-top: 2em;
+}
+.see-more-section .btn {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ▼▼▼ 여기가 핵심 수정 부분입니다 ▼▼▼ */
+/* 커스텀 스크롤바 스타일 */
+.history-list::-webkit-scrollbar {
+  width: 8px; /* 스크롤바의 너비 */
+}
+.history-list::-webkit-scrollbar-track {
+  background: var(--chip); /* 스크롤바 뒷 배경 색상 */
+  border-radius: 10px;
+}
+.history-list::-webkit-scrollbar-thumb {
+  background: #ccc; /* 스크롤바 막대 색상 */
+  border-radius: 10px;
+}
+.history-list::-webkit-scrollbar-thumb:hover {
+  background: var(--muted); /* 마우스를 올렸을 때의 색상 */
+}

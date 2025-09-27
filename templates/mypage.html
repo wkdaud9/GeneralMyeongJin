@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>마이페이지 | 이해했슈</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/mypage.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="top-header">
+        <a href="/" class="logo-link"
+          ><img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="서비스 로고"
+        /></a>
+      </header>
+
+      <main class="mypage-container">
+        <div class="card mypage-card">
+          <section class="profile-section">
+            {% if user %}
+            <div class="profile-pic"><i class="fa-solid fa-user"></i></div>
+            <h2 class="profile-name">{{ user.full_name }}</h2>
+            <p class="profile-email">{{ user.email }}</p>
+            <span class="level-badge">Level {{ user.user_level }}</span>
+            {% endif %}
+          </section>
+
+          <section class="action-section">
+            <a href="{{ url_for('auth.level_test') }}" class="btn">
+              <i class="fa-solid fa-pen-to-square"></i>
+              <span>문해력 테스트 다시하기</span>
+            </a>
+          </section>
+
+          <section class="history-grid">
+            <div
+              class="history-section"
+              data-api-endpoint="{{ url_for('mypage.get_all_read_history') }}"
+            >
+              <h3>최근에 읽은 기사</h3>
+              <div class="history-list" id="read-history-list">
+                {% for article in read_history %}
+                <a
+                  href="{{ article.url }}"
+                  target="_blank"
+                  class="history-item"
+                >
+                  <img
+                    src="{{ article.thumbnail }}"
+                    class="history-thumb"
+                    alt="{{ article.title }}"
+                  />
+                  <div class="history-item-content">
+                    <h4>{{ article.title }}</h4>
+                  </div>
+                </a>
+                {% else %}
+                <p class="empty-message">아직 읽은 기사가 없습니다.</p>
+                {% endfor %}
+              </div>
+            </div>
+            <div
+              class="history-section"
+              data-api-endpoint="{{ url_for('mypage.get_all_word_history') }}"
+            >
+              <h3>최근에 찾아본 단어</h3>
+              <div class="history-list" id="word-history-list">
+                {% for item in word_history %}
+                <div class="history-item">
+                  <div class="history-item-content">
+                    <h4>{{ item.word }}</h4>
+                    <p>{{ item.definition }}</p>
+                  </div>
+                </div>
+                {% else %}
+                <p class="empty-message">아직 찾아본 단어가 없습니다.</p>
+                {% endfor %}
+              </div>
+            </div>
+          </section>
+
+          <div class="see-more-section">
+            <button class="btn primary block" id="more-history-btn">
+              지난 7일 기록 모두 보기
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/mypage.js') }}"></script>
+  </body>
+</html>
