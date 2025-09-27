@@ -1,0 +1,184 @@
+/* 기본 스타일 초기화 및 폰트 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+/* 모달이 떴을 때 배경 스크롤 방지 */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* 메인 컨테이너 스타일 */
+.find-container {
+    width: 400px;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.03);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #111827;
+    font-weight: 800;
+}
+
+/* 탭 메뉴 스타일 */
+.tabs {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: #6b7280;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-button.active {
+    color: #111827;
+    border-bottom-color: #3b82f6;
+    font-weight: 700;
+}
+
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    height: 44px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-size: 15px;
+    background-color: #f8f9fa;
+}
+
+.input-group input:focus-visible {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* 버튼 스타일 */
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #111827;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+}
+.submit-btn:hover {
+    filter: brightness(1.2);
+}
+
+.links {
+    margin-top: 25px;
+}
+.links a {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 14px;
+}
+.links a:hover {
+    text-decoration: underline;
+}
+
+/* --- Modal Styles --- */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px); /* 배경 블러 효과 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0; /* 기본 투명 */
+    visibility: hidden; /* 기본 숨김 */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: min(400px, 90%);
+    text-align: center;
+    transform: scale(0.95); /* 기본 약간 작게 */
+    transition: transform 0.3s ease;
+}
+
+.modal-backdrop.active .modal-content {
+    transform: scale(1); /* 활성화 시 원래 크기로 */
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #111827;
+}
+
+.modal-content p {
+    margin-bottom: 24px;
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.close-btn {
+    padding: 10px 20px;
+    background-color: #111827;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+}
