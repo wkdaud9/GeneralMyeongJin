@@ -5,7 +5,6 @@ from supabase import create_client, Client
 from flask import Blueprint, jsonify
 import re
 from dotenv import load_dotenv
-import time
 
 # .env 파일에서 환경 변수를 로드합니다.
 load_dotenv()
@@ -133,38 +132,3 @@ def refetch_article(article_id):
             return jsonify({'status': 'error', 'message': str(e)}), 500
             
     return jsonify({'status': 'error', 'message': '해당 기사를 수집하는 데 실패했습니다.'}), 500
-
-def run_all_scrapes():
-    """모든 카테고리를 크롤링하고 DB에 저장하는 순수 파이썬 함수"""
-    print("="*30)
-    print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] 스케줄링된 크롤링 시작...")
-    
-    all_scraped_data = []
-    for category, url in NEWS_CATEGORIES.items():
-        print(f"--- 📰 '{category}' 카테고리 크롤링 시작 ---")
-        target_urls = get_news_urls(url)
-        print(f"✅ URL {len(target_urls)}개 수집 완료.")
-        for article_url in target_urls:
-            details = get_article_details(article_url, category)
-            if details and details['title'] != "제목 없음":
-                all_scraped_data.append(details)
-
-    if all_scraped_data:
-        unique_articles = {article['article_id']: article for article in all_scraped_data}
-        final_unique_data = list(unique_articles.values())
-        print(f"\n💾 수집된 전체 뉴스 {len(all_scraped_data)}개 중, 중복을 제외한 {len(final_unique_data)}개를 Supabase DB에 저장합니다...")
-        try:
-            supabase.table('articles').upsert(final_unique_data).execute()
-            print("✅ 데이터 저장(또는 업데이트) 성공!")
-        except Exception as e:
-            print(f"❌ 데이터 저장 실패: {e}")
-    else:
-        print("🤔 새로 수집된 뉴스가 없습니다.")
-    
-    print("="*30)
-
-@bp.route('/start')
-def start_scraping_route():
-    """테스트를 위해 수동으로 크롤링을 실행시키는 API"""
-    run_all_scrapes()
-    return jsonify({'status': 'success', 'message': '크롤링을 수동으로 실행했습니다.'})

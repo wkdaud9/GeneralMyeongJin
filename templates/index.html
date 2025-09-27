@@ -68,10 +68,7 @@
               <a href="#" data-category="economy" class="category-link">경제</a>
             </li>
             <li>
-              <a
-                href="#"
-                data-category="international"
-                class="category-link"
+              <a href="#" data-category="international" class="category-link"
                 >국제</a
               >
             </li>
@@ -128,40 +125,30 @@
           <h2 id="reader-title"></h2>
           <div id="reader-content"></div>
         </div>
-        
+
         <div class="dictionary-pane">
-            <div class="sidebar-tabs">
-                <button class="tab-link active" data-tab="tab-previous-articles">
-                    <i class="fa-solid fa-timeline"></i> 사건의 배경
-                </button>
-                <button class="tab-link" data-tab="tab-dictionary">
-                    <i class="fa-solid fa-book-open"></i> 단어 뜻 풀이
-                </button>
-            </div>
+          <div class="sidebar-tabs">
+            <button class="tab-link active" data-tab="tab-previous-articles">
+              <i class="fa-solid fa-timeline"></i> 사건의 배경
+            </button>
+            <button class="tab-link" data-tab="tab-dictionary">
+              <i class="fa-solid fa-book-open"></i> 단어 풀이
+            </button>
+          </div>
+          <div id="tab-previous-articles" class="tab-content active">
+            <ul class="timeline-list"></ul>
+          </div>
 
-            <div id="tab-previous-articles" class="tab-content active">
-                <div class="previous-articles-list" style="margin-top: 20px;">
-                    <a href="#" class="previous-article-item">
-                        <h6>'국회기록원법' 국회 본회의 통과, 여야 합의</h6>
-                        <span>2025-08-15</span>
-                    </a>
-                    <a href="#" class="previous-article-item">
-                        <h6>차관급 격상 논의, 기록원 독립성 강화 목적</h6>
-                        <span>2025-07-22</span>
-                    </a>
-                </div>
+          <div id="tab-dictionary" class="tab-content">
+            <div id="dictionary-content-wrapper">
+              <div id="dictionary-current">
+                <p class="placeholder">궁금한 단어를 드래그 해보세요!</p>
+              </div>
+              <div id="dictionary-history"></div>
             </div>
-
-            <div id="tab-dictionary" class="tab-content">
-                <div id="dictionary-content-wrapper">
-                    <div id="dictionary-current">
-                        <p class="placeholder">궁금한 단어를 드래그 해보세요!</p>
-                    </div>
-                    <div id="dictionary-history"></div>
-                </div>
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
       <button id="reader-close-btn">&times;</button>
     </div>
 

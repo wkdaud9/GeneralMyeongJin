@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from flask import Flask
-from views import scraper_views, main_views, news_views, llm_views, auth_views, mypage_views
+from views import scraper_views, main_views, news_views, llm_views, auth_views, mypage_views, timeline_views
 from apscheduler.schedulers.background import BackgroundScheduler
 from views.scraper_views import run_all_scrapes # ◀ 크롤링 함수 import
 from datetime import datetime # ◀ datetime import 추가
@@ -29,6 +29,7 @@ app.register_blueprint(news_views.bp)
 app.register_blueprint(auth_views.bp) # ◀ auth_views.bp 등록 코드를 추가합니다.
 app.register_blueprint(llm_views.bp)
 app.register_blueprint(mypage_views.bp)
+app.register_blueprint(timeline_views.bp)
 
 
 if __name__ == '__main__':

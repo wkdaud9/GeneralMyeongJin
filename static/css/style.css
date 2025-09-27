@@ -448,7 +448,8 @@ h2 {
   line-height: 1.7;
   margin: 0;
 }
-/* 현재 검색 결과 스타일 */ #dictionary-current {
+/* 현재 검색 결과 스타일 */
+#dictionary-current {
   padding-bottom: 1.5em;
 }
 
@@ -485,6 +486,96 @@ h2 {
 #dictionary-content p.placeholder {
   text-align: center;
   color: #868e96;
+}
+#tab-dictionary {
+  flex-grow: 1; /* 남은 공간을 채우도록 성장 */
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤바 생성 */
+  padding-right: 10px; /* 스크롤바 때문에 내용이 가려지지 않도록 패딩 추가 */
+  margin-top: 0; /* 상단 여백 유지 */
+}
+
+/* static/css/style.css 파일에 다음 스타일을 추가하거나 수정합니다 */
+
+/* 부모 컨테이너에 overflow-y: auto 속성 적용 (기존에 추가했을 것임) */
+#tab-previous-articles {
+  overflow-y: auto; /* 스크롤바 */
+  padding-right: 10px; /* 스크롤바와 내용 겹침 방지 */
+  margin-top: 0; /* 불필요한 상단 마진 제거 */
+  padding-top: 10px; /* 맨 위 항목과 상단 사이 간격 */
+  position: relative; /* 중요: 내부 absolute 요소의 컨테이닝 블록 */
+}
+
+.timeline-list {
+  list-style: none; /* 리스트 기본 마커 제거 */
+  padding: 0;
+  margin: 0;
+  position: relative; /* 자식 요소의 absolute 위치 기준 */
+  /* min-height: 100%; */ /* 이 속성이 필요할 수도 있습니다. */
+  /* 이전에 여기에 .previous-articles-list 스타일이 적용되었을 가능성 */
+  /* 이 ul이 .previous-articles-list 클래스를 가진 div 안에 있기 때문에,
+       위의 .previous-articles-list 스타일이 ul에 영향을 줄 수 있습니다.
+       따라서 .previous-articles-list의 flex 설정을 제거하는 것이 중요합니다. */
+}
+
+/* 타임라인 연결선 (ul::before) */
+.timeline-list::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 15px; /* 마커의 중앙에 오도록 조정. 이 값을 조정하여 선 위치 변경 */
+  width: 2px; /* 선의 두께 */
+  background-color: #ced4da; /* 선의 색상 (var(--border) 변수와 동일할 수 있음) */
+  z-index: 0; /* 항목들 뒤에 위치 */
+}
+
+/* 각 타임라인 항목 (li) */
+.timeline-item {
+  position: relative; /* 마커 위치 기준 */
+  padding: 15px 0 15px 40px; /* 왼쪽 패딩으로 마커 공간 확보 */
+  /* background-color: transparent; */ /* 배경색 투명으로 설정하여 선을 가리지 않도록 */
+}
+
+/* 타임라인 마커 (원형) */
+.timeline-marker {
+  position: absolute;
+  left: 8px; /* 선 위에 중앙 배치 (left: 15px - (width/2) ) */
+  top: 50%; /* 수직 중앙 */
+  transform: translateY(-50%); /* 정확한 수직 중앙 */
+  width: 16px; /* 원의 크기 */
+  height: 16px;
+  background-color: #007bff; /* 원의 색상 (var(--primary-color) 변수와 동일할 수 있음) */
+  border-radius: 50%; /* 원형 */
+  border: 2px solid #f8f9fa; /* 원 주변에 배경색 테두리 (var(--background-light) 변수와 동일할 수 있음) */
+  z-index: 1; /* 선보다 위에 위치 */
+}
+
+/* 기사 항목 내용 (링크) */
+.previous-article-item {
+  display: block;
+  color: #343a40; /* var(--text-color) */
+  text-decoration: none;
+  transition: background-color 0.2s;
+  background-color: #fff; /* 배경색 추가 (var(--background)) */
+  padding: 10px 15px; /* 내용 패딩 */
+  border-radius: 8px; /* 둥근 모서리 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* 은은한 그림자 */
+  margin-left: 10px; /* 마커와의 간격 */
+}
+.previous-article-item:hover {
+  background-color: #f1f3f5; /* var(--hover-bg) */
+}
+.previous-article-item h6 {
+  margin: 0 0 0.3em 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #212529; /* var(--heading-color) */
+}
+.previous-article-item span {
+  font-size: 12px;
+  color: #6c757d; /* var(--muted) */
+  display: block;
+  margin-top: 0.3em;
 }
 
 /* 리더 뷰 닫기 버튼 */
@@ -525,8 +616,7 @@ h2 {
 }
 #reader-view.visible .article-pane > *,
 #reader-view.visible .dictionary-pane > * {
-  animation: fadeInSlideUp 0.5s forwards
-    cubic-bezier(0.25, 1, 0.5, 1);
+  animation: fadeInSlideUp 0.5s forwards cubic-bezier(0.25, 1, 0.5, 1);
   opacity: 0;
 }
 #reader-view.visible #reader-title {
@@ -579,7 +669,6 @@ h2 {
   font-weight: 500;
 }
 
-
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -623,7 +712,7 @@ h2 {
   background-color: #fff;
   color: #000;
   font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .tab-content {
@@ -635,25 +724,29 @@ h2 {
   display: block;
 }
 
-.previous-articles-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
 .previous-article-item {
-  display: block; padding: 12px; border-radius: 8px; text-decoration: none;
-  background-color: #fff; border: 1px solid #e9ecef; transition: all 0.2s;
+  display: block;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s;
 }
 
 .previous-article-item:hover {
-  background-color: #f8f9fa; transform: translateY(-2px); border-color: #dee2e6;
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+  border-color: #dee2e6;
 }
 
 .previous-article-item h6 {
-  margin: 0 0 5px 0; font-size: 15px; color: #343a40;
+  margin: 0 0 5px 0;
+  font-size: 15px;
+  color: #343a40;
 }
 
 .previous-article-item span {
-  font-size: 12px; color: #868e96;
+  font-size: 12px;
+  color: #868e96;
 }

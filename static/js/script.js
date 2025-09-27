@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const seeMoreBtn = document.getElementById("see-more-btn");
   const loaderOverlay = document.getElementById("loader-overlay");
 
-  // 모달 관련 요소
+  // 선택지 모달 요소
   const choiceModal = document.querySelector(".news-modal");
   const modalTitle = document.getElementById("modal-title");
   const summarizeBtn = document.getElementById("summarize-btn");
@@ -22,11 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const dictionaryHistory = document.getElementById("dictionary-history");
   const readerCloseBtn = document.getElementById("reader-close-btn");
 
+  // 리더 뷰 사이드바 탭 요소
   const sidebarTabs = document.querySelectorAll(".tab-link");
-  const tabContents = document.querySelectorAll(".dictionary-pane .tab-content");
+  const tabContents = document.querySelectorAll(
+    ".dictionary-pane .tab-content"
+  );
+  const timelineList = document.querySelector(".previous-articles-list");
 
   let summaryPromise = null;
-  let currentArticleId = null;
+  let currentArticleId = null; // 현재 보고 있는 기사 ID 저장용
 
   // 2. 뉴스 데이터를 받아 화면에 그려주는 함수
   const renderNews = (newsData, rankingData) => {
@@ -38,32 +42,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const featured = newsData[0];
     const featuredHtml = `
-              <article class="news-item featured" data-article-id="${featured.article_id}" data-url="${featured.url}">
-                  <img src="${featured.thumbnail}" alt="${featured.title}" class="image-placeholder">
-                  <div class="article-content">
-                      <h4>${featured.title}</h4>
-                      </div>
-              </article>`;
+            <article class="news-item featured" data-article-id="${featured.article_id}" data-url="${featured.url}">
+                <img src="${featured.thumbnail}" alt="${featured.title}" class="image-placeholder">
+                <div class="article-content"><h4>${featured.title}</h4></div>
+            </article>`;
     newsLayout.insertAdjacentHTML("beforeend", featuredHtml);
 
     newsData.slice(1).forEach((news) => {
       const newsHtml = `
-                          <article class="news-item" data-article-id="${news.article_id}" data-url="${news.url}">
-                              <img src="${news.thumbnail}" alt="${news.title}" class="image-placeholder small">
-                              <div class="article-content">
-                                  <h5>${news.title}</h5>
-                                  </div>
-                          </article>`;
+                <article class="news-item" data-article-id="${news.article_id}" data-url="${news.url}">
+                    <img src="${news.thumbnail}" alt="${news.title}" class="image-placeholder small">
+                    <div class="article-content"><h5>${news.title}</h5></div>
+                </article>`;
       newsLayout.insertAdjacentHTML("beforeend", newsHtml);
     });
 
     if (rankingData && rankingData.length > 0) {
       rankingData.forEach((news) => {
         const rankingHtml = `
-                          <article class="ranking-item" data-article-id="${news.article_id}" data-url="${news.url}">
-                              <img src="${news.thumbnail}" alt="${news.title}" class="image-placeholder rank">
-                              <div class="article-content"><h6>${news.title}</h6></div>
-                          </article>`;
+                    <article class="ranking-item" data-article-id="${news.article_id}" data-url="${news.url}">
+                        <img src="${news.thumbnail}" alt="${news.title}" class="image-placeholder rank">
+                        <div class="article-content"><h6>${news.title}</h6></div>
+                    </article>`;
         rankingList.insertAdjacentHTML("beforeend", rankingHtml);
       });
     } else {
@@ -83,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       renderNews(data.news_list, data.ranking_list);
     } catch (error) {
-      console.error("뉴스 로딩 에러:", error);
       newsLayout.innerHTML = "<p>뉴스를 불러오는데 실패했습니다.</p>";
     }
   };
@@ -115,12 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   };
 
-  // 7. 뉴스 클릭 시 선택지 모달을 열고, 조회수를 올리는 함수
+  // 7. 뉴스 클릭 시 선택지 모달을 여는 함수
   const openChoiceModal = (articleElement) => {
-    const title = articleElement.querySelector("h4, h5, h6").textContent;
+    const title = articleElement.querySelector("h3, h4, h5, h6").textContent;
     const url = articleElement.dataset.url;
     currentArticleId = articleElement.dataset.articleId;
 
+    // 조회수 API 호출
     if (currentArticleId) {
       fetch(`/api/news/view/${currentArticleId}`, { method: "POST" }).catch(
         (error) => console.error("Failed to record view:", error)
@@ -154,16 +154,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       readerTitle.textContent = modalTitle.textContent;
-      readerContent.innerHTML = data.summary;
+      readerContent.innerHTML = data.summary.replace(/\n/g, "<br>");
 
-      dictionaryCurrent.innerHTML =
-        '<p class="placeholder">궁금한 단어를 드래그 해보세요!</p>';
-      dictionaryHistory.innerHTML = "";
+      // 리더 뷰가 열릴 때, '사건의 배경' 탭을 기본으로 활성화하고 타임라인 로딩 시작
+      activateTab("tab-previous-articles");
+      loadTimeline(currentArticleId);
 
       readerView.classList.remove("hidden");
       setTimeout(() => readerView.classList.add("visible"), 10);
     } catch (error) {
-      alert(`AI 분석 실패: ${error.message}`);
+      Swal.fire({ icon: "error", title: "AI 분석 실패", text: error.message });
     } finally {
       loaderOverlay.classList.remove("visible");
       setTimeout(() => loaderOverlay.classList.add("hidden"), 300);
@@ -171,21 +171,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // 9. 단어 뜻 찾기(드래그) 이벤트
-  readerContent.addEventListener("mouseup", async () => {
+  readerContent.addEventListener("mouseup", async (e) => {
     const selectedText = window.getSelection().toString().trim();
     if (selectedText.length > 0 && selectedText.length < 15) {
-      
-      const backgroundTab = document.querySelector('.tab-link[data-tab="tab-previous-articles"]');
-      if (backgroundTab && backgroundTab.classList.contains("active")) {
-        const backgroundContent = document.getElementById('tab-previous-articles');
-        backgroundTab.classList.remove('active');
-        backgroundContent.classList.remove('active');
-        
-        const dictionaryTab = document.querySelector('.tab-link[data-tab="tab-dictionary"]');
-        const dictionaryContent = document.getElementById('tab-dictionary');
-        dictionaryTab.classList.add('active');
-        dictionaryContent.classList.add('active');
-      }
+      // 단어 드래그 시 자동으로 '단어 뜻 풀이' 탭으로 전환
+      activateTab("tab-dictionary");
 
       if (
         dictionaryCurrent.innerHTML &&
@@ -229,17 +219,60 @@ document.addEventListener("DOMContentLoaded", () => {
     readerView.classList.remove("visible");
     setTimeout(() => readerView.classList.add("hidden"), 300);
   });
-  
+
   // 11. 사이드바 탭 기능
-  sidebarTabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-          sidebarTabs.forEach(t => t.classList.remove("active"));
-          tabContents.forEach(c => c.classList.remove("active"));
-          tab.classList.add("active");
-          document.getElementById(tab.dataset.tab).classList.add("active");
-      });
+  const activateTab = (tabId) => {
+    sidebarTabs.forEach((t) => t.classList.remove("active"));
+    tabContents.forEach((c) => c.classList.remove("active"));
+    const activeTab = document.querySelector(`.tab-link[data-tab="${tabId}"]`);
+    const activeContent = document.getElementById(tabId);
+    if (activeTab) activeTab.classList.add("active");
+    if (activeContent) activeContent.classList.add("active");
+  };
+
+  sidebarTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const tabId = tab.dataset.tab;
+      activateTab(tabId);
+      if (tabId === "tab-previous-articles") {
+        loadTimeline(currentArticleId);
+      }
+    });
   });
 
-  // 12. 페이지가 처음 로드될 때 'home' 카테고리 뉴스를 자동으로 불러옵니다.
+  // 12. 타임라인 로딩 함수
+  const loadTimeline = async (articleId) => {
+    if (!articleId) return;
+    const timelineList = document.querySelector(".timeline-list"); // ul 요소 선택
+    timelineList.innerHTML =
+      '<p class="placeholder">관련 기사를 검색 중입니다...</p>'; // ul의 자식으로 추가
+
+    try {
+      const response = await fetch(`/api/timeline/${articleId}`);
+      const data = await response.json();
+
+      timelineList.innerHTML = ""; // 기존 내용 비우기
+      if (data.length > 0) {
+        data.forEach((article) => {
+          const timelineHtml = `
+                    <li class="timeline-item">
+                        <div class="timeline-marker"></div> <a href="${article.url}" target="_blank" class="previous-article-item">
+                            <h6>${article.title}</h6>
+                            <span>${article.datetime}</span>
+                        </a>
+                    </li>`;
+          timelineList.insertAdjacentHTML("beforeend", timelineHtml);
+        });
+      } else {
+        timelineList.innerHTML =
+          '<p class="placeholder">관련된 과거 기사를 찾을 수 없습니다.</p>';
+      }
+    } catch (error) {
+      timelineList.innerHTML =
+        '<p class="placeholder">타임라인을 불러오는 데 실패했습니다.</p>';
+    }
+  };
+
+  // 13. 페이지가 처음 로드될 때 'home' 카테고리 뉴스를 자동으로 불러옵니다.
   fetchAndRenderNews("home");
 });
